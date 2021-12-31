@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use percentage::Percentage;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
@@ -21,12 +22,19 @@ pub mod SplitsProgram {
         Ok(())
     }
 
-    pub fn pay(ctx: Context<PayerContext>) -> ProgramResult {
+    pub fn send_sol(ctx: Context<SenderContext>, amount: u64) -> ProgramResult {
         let base_account = &mut ctx.accounts.base_account;
         let msg_sender = ctx.accounts.msg_sender.key();
 
         for split in base_account.splits.iter() {
-            
+            let split_percentage = Percentage::from(split.percentage);
+            let split_amount = split_percentage.apply_to(amount);
+
+            let ix = anchor_lang::solana_program::system_instruction::transfer(
+                &msg_sender,
+                &split.address,
+                split_amount,
+            );
         }
 
         Ok(())
@@ -55,7 +63,7 @@ pub struct BaseAccount {
 }
 
 #[derive(Accounts)]
-pub struct PayerContext<'info> {
+pub struct SenderContext<'info> {
     #[account(mut)]
     pub base_account: Account<'info, BaseAccount>,
     pub msg_sender: Signer<'info>,
