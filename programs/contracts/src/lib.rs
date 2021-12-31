@@ -4,7 +4,7 @@ use percentage::Percentage;
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
-pub mod SplitsProgram {
+pub mod splits_program {
     use super::*;
     pub fn initialize(ctx: Context<Initialize>, authority: Pubkey, splits: Vec<Splits>) -> ProgramResult {
         let base_account = &mut ctx.accounts.base_account;
@@ -30,7 +30,13 @@ pub mod SplitsProgram {
             let split_percentage = Percentage::from(split.percentage);
             let split_amount = split_percentage.apply_to(amount);
 
-            let ix = anchor_lang::solana_program::system_instruction::transfer(
+            // let ix = anchor_lang::solana_program::system_instruction::transfer(
+            //     &msg_sender,
+            //     &split.address,
+            //     split_amount,
+            // );
+            
+            anchor_lang::solana_program::system_instruction::transfer(
                 &msg_sender,
                 &split.address,
                 split_amount,
