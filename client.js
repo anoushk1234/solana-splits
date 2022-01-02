@@ -3,9 +3,11 @@
 // ergonomic example, see `tests/basic-0.js` in this workspace.
 
 const anchor = require("@project-serum/anchor");
+const { SystemProgram } = anchor.web3;
 
+const provider = anchor.Provider.env();
 // Configure the local cluster.
-anchor.setProvider(anchor.Provider.local());
+anchor.setProvider(provider);
 
 async function main() {
   // #region main
@@ -14,14 +16,21 @@ async function main() {
     require("fs").readFileSync("./target/idl/basic_0.json", "utf8")
   );
 
-  // Address of the deployed program.
-  const programId = new anchor.web3.PublicKey("<YOUR-PROGRAM-ID>");
+  const programId = new anchor.web3.PublicKey("51NDADRmoBvRPa4PQz7WixDurvS5SXncdnWGhM7nuNqK");
+  const baseAccount = anchor.web3.Keypair.generate();
+  const splitAdmin = anchor.web3.Keypair.generate();
 
   // Generate the program client from IDL.
-  const program = new anchor.Program(idl, programId);
+  const program = new anchor.Program(idl, programId, provider);
 
   // Execute the RPC.
-  await program.rpc.initialize();
+  await program.rpc.initialize({
+    accounts: {
+      baseAccount: baseAccount.publicKey,
+      user: provider.wallet.publicKey,
+      systemProgram: SystemProgram.programId
+    }
+  });
   // #endregion main
 }
 

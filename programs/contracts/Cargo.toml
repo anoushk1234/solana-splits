@@ -16,3 +16,6 @@ cpi = ["no-entrypoint"]
 anchor-lang = "0.18.0"
 percentage = "0.1.0"
 solana-program = "1.4.4"
+
+[profile.release]
+panic = 'abort'

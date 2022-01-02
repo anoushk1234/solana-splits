@@ -25,6 +25,8 @@ pub mod splits_program {
         let mut total_percentage = 0;
         let mut index = 0;
 
+        assert_eq!(addresses.len(), percentages.len(), "NEW SPLIT: number of addresses should be equal to number of percentages");
+
         for ac_address in addresses.iter() {
             total_percentage = total_percentage + percentages[index];
             index = index + 1;
@@ -73,6 +75,8 @@ pub mod splits_program {
                 
                 index = index + 1;
             }
+
+            panic!("account address doesn't exist in splits info");
         }
 
         base_account.total_amount = amount;
@@ -83,7 +87,7 @@ pub mod splits_program {
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 6942)]
+    #[account(init, payer = user, space = 9000)]
     pub base_account: Account<'info, BaseAccount>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -92,7 +96,7 @@ pub struct Initialize<'info> {
 
 #[derive(Accounts)]
 pub struct NewSplitContext<'info> {
-    #[account(init, payer = user, space = 6942)]
+    #[account(init, payer = user, space = 9000)]
     pub admin_account: Account<'info, AdminAccount>,
     #[account(mut)]
     pub base_account: Account<'info, BaseAccount>,
