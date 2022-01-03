@@ -13,10 +13,10 @@ async function main() {
   // #region main
   // Read the generated IDL.
   const idl = JSON.parse(
-    require("fs").readFileSync("./target/idl/basic_0.json", "utf8")
+    require("fs").readFileSync("./target/idl/splits_program.json", "utf8")
   );
 
-  const programId = new anchor.web3.PublicKey("51NDADRmoBvRPa4PQz7WixDurvS5SXncdnWGhM7nuNqK");
+  const programId = new anchor.web3.PublicKey("4TqU7XzCcwmGZu89sYK2bLzsrLR4P4sAhVhSmgaxbNum");
   const baseAccount = anchor.web3.Keypair.generate();
   const splitAdmin = anchor.web3.Keypair.generate();
 
@@ -28,8 +28,10 @@ async function main() {
     accounts: {
       baseAccount: baseAccount.publicKey,
       user: provider.wallet.publicKey,
-      systemProgram: SystemProgram.programId
-    }
+      systemProgram: SystemProgram.programId,
+      authority: baseAccount.publicKey
+    },
+    signers: [baseAccount]
   });
   // #endregion main
 }

@@ -8,13 +8,18 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 pub mod splits_program {
     use super::*;
     pub fn initialize(ctx: Context<Initialize>) -> ProgramResult {
-        if ctx.accounts.base_account.inited == false {
-            let base_account = &mut ctx.accounts.base_account;
-            base_account.total_amount = 0;
-            base_account.total_splits = 0;
-            base_account.inited = true;
-            base_account.authority = base_account.key();
-        }
+        // if ctx.accounts.base_account.inited == false {
+        //     let base_account = &mut ctx.accounts.base_account;
+        //     base_account.total_amount = 0;
+        //     base_account.total_splits = 0;
+        //     base_account.inited = true;
+        //     base_account.authority = base_account.key();
+        // }
+
+        let base_account = &mut ctx.accounts.base_account;
+        base_account.total_amount = 0;
+        base_account.total_splits = 0;
+        base_account.inited = true;
 
         Ok(())
     }
@@ -107,7 +112,6 @@ pub struct NewSplitContext<'info> {
 #[account]
 pub struct BaseAccount {
     pub inited: bool,
-    pub authority: Pubkey,
     pub total_splits: u64,
     pub total_amount: u64
 }
